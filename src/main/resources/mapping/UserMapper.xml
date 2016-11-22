@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.course.selection.dao.UserMapper" >
+  <resultMap id="BaseResultMap" type="com.course.selection.entity.User" >
+    <id column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="studno" property="studno" jdbcType="INTEGER" />
+    <result column="password" property="password" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="sex" property="sex" jdbcType="VARCHAR" />
+    <result column="college_id" property="collegeId" jdbcType="INTEGER" />
+    <result column="major" property="major" jdbcType="VARCHAR" />
+    <result column="clazz" property="clazz" jdbcType="INTEGER" />
+    <result column="grade" property="grade" jdbcType="INTEGER" />
+    <result column="limit_credit" property="limitCredit" jdbcType="INTEGER" />
+    <result column="selected_credit" property="selectedCredit" jdbcType="INTEGER" />
+    <result column="nlisten_credit" property="nlistenCredit" jdbcType="INTEGER" />
+    <result column="e_mail" property="eMail" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="baseColumnList" >
+    user_id, studno, password, name, sex, college_id, major, clazz, grade, limit_credit, 
+    selected_credit, nlisten_credit, e_mail
+  </sql>
+  <sql id="whereClause">
+  	where 1=1
+  	<if test="userId != null and userId != ''"><![CDATA[ and user_id = #{userId}]]></if>
+  	<if test="studno != null and studno != ''"><![CDATA[ and studno = #{studno}]]></if>
+  	<if test="password != null and password != ''"><![CDATA[ and password = #{password}]]></if>
+  	<if test="name != null and name != ''"><![CDATA[ and name = #{name}]]></if>
+  	<if test="sex != null and sex != ''"><![CDATA[ and sex = #{sex}]]></if>
+  </sql>
+  
+  <select id="findList" resultMap="BaseResultMap" parameterType="com.course.selection.entity.User" >
+    select
+    <include refid="Base_Column_List" />
+    from user
+    <include refid="whereClause" />
+  </select>
+  
+  <update id="update" parameterType="com.course.selection.entity.User" >
+    update user
+    set password = #{password,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      sex = #{sex,jdbcType=VARCHAR},
+      college_id = #{collegeId,jdbcType=INTEGER},
+      major = #{major,jdbcType=VARCHAR},
+      clazz = #{clazz,jdbcType=INTEGER},
+      grade = #{grade,jdbcType=INTEGER},
+      limit_credit = #{limitCredit,jdbcType=INTEGER},
+      selected_credit = #{selectedCredit,jdbcType=INTEGER},
+      nlisten_credit = #{nlistenCredit,jdbcType=INTEGER},
+      e_mail = #{eMail,jdbcType=VARCHAR}
+    where user_id = #{userId,jdbcType=INTEGER}
+  </update>
+</mapper>

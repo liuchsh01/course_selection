@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.course.selection.dao.TimePlaceMapper" >
+  <resultMap id="BaseResultMap" type="com.course.selection.entity.TimePlace" >
+    <id column="course_id" property="courseId" jdbcType="INTEGER" />
+    <id column="week_day" property="weekDay" jdbcType="INTEGER" />
+    <id column="class_no" property="classNo" jdbcType="INTEGER" />
+    <result column="place" property="place" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    course_id, week_day, class_no, place
+  </sql>
+  <select id="findList" resultMap="BaseResultMap" parameterType="com.course.selection.entity.TimePlace" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from time_place
+    <if test="_parameter != null" >
+      <include refid="_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.course.selection.entity.TimePlaceKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from time_place
+    where course_id = #{courseId,jdbcType=INTEGER}
+      and week_day = #{weekDay,jdbcType=INTEGER}
+      and class_no = #{classNo,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.course.selection.entity.TimePlaceKey" >
+    delete from time_place
+    where course_id = #{courseId,jdbcType=INTEGER}
+      and week_day = #{weekDay,jdbcType=INTEGER}
+      and class_no = #{classNo,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteBy" parameterType="com.course.selection.entity.TimePlace" >
+    delete from time_place
+    <if test="_parameter != null" >
+      <include refid="_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.course.selection.entity.TimePlace" >
+    insert into time_place (course_id, week_day, class_no, 
+      place)
+    values (#{courseId,jdbcType=INTEGER}, #{weekDay,jdbcType=INTEGER}, #{classNo,jdbcType=INTEGER}, 
+      #{place,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.course.selection.entity.TimePlace" >
+    insert into time_place
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="courseId != null" >
+        course_id,
+      </if>
+      <if test="weekDay != null" >
+        week_day,
+      </if>
+      <if test="classNo != null" >
+        class_no,
+      </if>
+      <if test="place != null" >
+        place,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="courseId != null" >
+        #{courseId,jdbcType=INTEGER},
+      </if>
+      <if test="weekDay != null" >
+        #{weekDay,jdbcType=INTEGER},
+      </if>
+      <if test="classNo != null" >
+        #{classNo,jdbcType=INTEGER},
+      </if>
+      <if test="place != null" >
+        #{place,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countBy" parameterType="com.course.selection.entity.TimePlace" resultType="java.lang.Integer" >
+    select count(*) from time_place
+    <if test="_parameter != null" >
+      <include refid="_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateBySelective" parameterType="map" >
+    update time_place
+    <set >
+      <if test="record.courseId != null" >
+        course_id = #{record.courseId,jdbcType=INTEGER},
+      </if>
+      <if test="record.weekDay != null" >
+        week_day = #{record.weekDay,jdbcType=INTEGER},
+      </if>
+      <if test="record.classNo != null" >
+        class_no = #{record.classNo,jdbcType=INTEGER},
+      </if>
+      <if test="record.place != null" >
+        place = #{record.place,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By__Where_Clause" />
+    </if>
+  </update>
+  <update id="updateBy" parameterType="map" >
+    update time_place
+    set course_id = #{record.courseId,jdbcType=INTEGER},
+      week_day = #{record.weekDay,jdbcType=INTEGER},
+      class_no = #{record.classNo,jdbcType=INTEGER},
+      place = #{record.place,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By__Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.course.selection.entity.TimePlace" >
+    update time_place
+    <set >
+      <if test="place != null" >
+        place = #{place,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where course_id = #{courseId,jdbcType=INTEGER}
+      and week_day = #{weekDay,jdbcType=INTEGER}
+      and class_no = #{classNo,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.course.selection.entity.TimePlace" >
+    update time_place
+    set place = #{place,jdbcType=VARCHAR}
+    where course_id = #{courseId,jdbcType=INTEGER}
+      and week_day = #{weekDay,jdbcType=INTEGER}
+      and class_no = #{classNo,jdbcType=INTEGER}
+  </update>
+</mapper>

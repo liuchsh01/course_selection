@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.course.selection.dao.SelectionMapper" >
+  <resultMap id="BaseResultMap" type="com.course.selection.entity.Selection" >
+    <id column="user_id" property="userId" jdbcType="INTEGER" />
+    <id column="course_id" property="courseId" jdbcType="INTEGER" />
+    <result column="nlisten" property="nlisten" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By__Where_Clause" >
+    <where >
+      <foreach collection=".oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    user_id, course_id, nlisten
+  </sql>
+  <select id="selectBy" resultMap="BaseResultMap" parameterType="com.course.selection.entity.Selection" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from selection
+    <if test="_parameter != null" >
+      <include refid="_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.course.selection.entity.SelectionKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from selection
+    where user_id = #{userId,jdbcType=INTEGER}
+      and course_id = #{courseId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.course.selection.entity.SelectionKey" >
+    delete from selection
+    where user_id = #{userId,jdbcType=INTEGER}
+      and course_id = #{courseId,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteBy" parameterType="com.course.selection.entity.Selection" >
+    delete from selection
+    <if test="_parameter != null" >
+      <include refid="_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.course.selection.entity.Selection" >
+    insert into selection (user_id, course_id, nlisten
+      )
+    values (#{userId,jdbcType=INTEGER}, #{courseId,jdbcType=INTEGER}, #{nlisten,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.course.selection.entity.Selection" >
+    insert into selection
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="courseId != null" >
+        course_id,
+      </if>
+      <if test="nlisten != null" >
+        nlisten,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="courseId != null" >
+        #{courseId,jdbcType=INTEGER},
+      </if>
+      <if test="nlisten != null" >
+        #{nlisten,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <select id="countBy" parameterType="com.course.selection.entity.Selection" resultType="java.lang.Integer" >
+    select count(*) from selection
+    <if test="_parameter != null" >
+      <include refid="_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateBySelective" parameterType="map" >
+    update selection
+    <set >
+      <if test="record.userId != null" >
+        user_id = #{record.userId,jdbcType=INTEGER},
+      </if>
+      <if test="record.courseId != null" >
+        course_id = #{record.courseId,jdbcType=INTEGER},
+      </if>
+      <if test="record.nlisten != null" >
+        nlisten = #{record.nlisten,jdbcType=INTEGER},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By__Where_Clause" />
+    </if>
+  </update>
+  <update id="updateBy" parameterType="map" >
+    update selection
+    set user_id = #{record.userId,jdbcType=INTEGER},
+      course_id = #{record.courseId,jdbcType=INTEGER},
+      nlisten = #{record.nlisten,jdbcType=INTEGER}
+    <if test="_parameter != null" >
+      <include refid="Update_By__Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.course.selection.entity.Selection" >
+    update selection
+    <set >
+      <if test="nlisten != null" >
+        nlisten = #{nlisten,jdbcType=INTEGER},
+      </if>
+    </set>
+    where user_id = #{userId,jdbcType=INTEGER}
+      and course_id = #{courseId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.course.selection.entity.Selection" >
+    update selection
+    set nlisten = #{nlisten,jdbcType=INTEGER}
+    where user_id = #{userId,jdbcType=INTEGER}
+      and course_id = #{courseId,jdbcType=INTEGER}
+  </update>
+</mapper>
