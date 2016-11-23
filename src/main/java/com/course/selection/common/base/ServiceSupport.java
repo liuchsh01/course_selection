@@ -4,13 +4,10 @@ import java.lang.reflect.ParameterizedType;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 
 public abstract class ServiceSupport<E> implements Service<E> {
-    protected final Log log = LogFactory.getLog(getClass());
 
     @Autowired
     private Dao<E> dao;

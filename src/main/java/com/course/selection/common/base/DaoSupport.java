@@ -1,7 +1,5 @@
 package com.course.selection.common.base;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -17,7 +15,6 @@ import java.util.Objects;
  * @param <E>
  */
 public abstract class DaoSupport<E> implements Dao<E> {
-    protected final Log log = LogFactory.getLog(getClass());
 
     private Class<E> entityClass;
 
@@ -102,14 +99,7 @@ public abstract class DaoSupport<E> implements Dao<E> {
     }
 
     public Integer count(String statement, Object parameter) {
-        Integer var = 0;
-        try {
-            var = (Integer) getSqlSession().selectOne(statement, parameter);
-        } catch (Exception ex) {
-            log.error("count error :", ex);
-            return 0;
-        }
-        return var;
+        return (Integer) getSqlSession().selectOne(statement, parameter);
     }
 
     public Long getSequenceId(String sequence) {
