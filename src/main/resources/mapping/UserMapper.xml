@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.course.selection.dao.UserMapper" >
-  <resultMap id="BaseResultMap" type="com.course.selection.entity.User" >
+<mapper namespace="user" >
+  <resultMap id="resultMap" type="com.course.selection.entity.User" >
     <id column="user_id" property="userId" jdbcType="INTEGER" />
     <result column="studno" property="studno" jdbcType="INTEGER" />
     <result column="password" property="password" jdbcType="VARCHAR" />
@@ -29,9 +29,9 @@
   	<if test="sex != null and sex != ''"><![CDATA[ and sex = #{sex}]]></if>
   </sql>
   
-  <select id="findList" resultMap="BaseResultMap" parameterType="com.course.selection.entity.User" >
+  <select id="findList" resultMap="resultMap" parameterType="com.course.selection.entity.User" >
     select
-    <include refid="Base_Column_List" />
+    <include refid="baseColumnList" />
     from user
     <include refid="whereClause" />
   </select>
