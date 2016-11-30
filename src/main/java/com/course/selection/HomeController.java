@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.course.selection.entity.A;
-import com.course.selection.service.AService;
+import com.course.selection.service.CollegeService;
 
 /**
  * Handles requests for the application home page.
@@ -26,7 +26,7 @@ public class HomeController {
 	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
 	
 	@Autowired
-	private AService aService;
+	private CollegeService aService;
 	/**
 	 * Simply selects the home view to render by returning its name.
 	 */

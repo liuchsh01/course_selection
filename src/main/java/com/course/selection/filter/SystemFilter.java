@@ -26,7 +26,7 @@ public class SystemFilter implements Filter {
 		HttpServletResponse httpResponse = (HttpServletResponse) servletResponse;
 		HttpSession session = httpRequest.getSession(true);
 		String uri =httpRequest.getRequestURI(); 
-		if (!uri.contains("/images") && !uri.contains("/styles") && !uri.contains("/scripts") && !uri.contains("/system/jumpLogin.do") && !uri.contains("/system/login.do") && !uri.contains("/system/checkOut.do")) {
+		if (!uri.contains("/static/") && !uri.contains("/system/")) {
 			Object object = session.getAttribute("user");
 			User user = object == null ? null : (User) object;
 			if (user == null) {

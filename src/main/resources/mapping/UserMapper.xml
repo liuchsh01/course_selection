@@ -29,7 +29,7 @@
   	<if test="sex != null and sex != ''"><![CDATA[ and sex = #{sex}]]></if>
   </sql>
   
-  <select id="findList" resultMap="resultMap" parameterType="com.course.selection.entity.User" >
+  <select id="findList" resultMap="resultMap" parameterType="java.util.Map" >
     select
     <include refid="baseColumnList" />
     from user

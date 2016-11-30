@@ -4,7 +4,7 @@ String path = request.getContextPath();
 String basePath = path + "/";
 %>
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title>选课子系统</title>
@@ -27,8 +27,8 @@ String basePath = path + "/";
 			请输入密码
 			<input type="password" name="password" size="10" maxlength="20">
 			校验码：
-			<input name="GetCode" type="text" size="6">
-			<img src="" alt="看不清？点击更换" onclick="this.src=this.src">
+			<input type="text" name="code" size="6">
+			<img alt="看不清？点击更换"  id="codeImg"  onClick="javascript:flushCode()"/>
 			</font>
 		</form>
 	</div>
@@ -73,4 +73,13 @@ String basePath = path + "/";
 	</div>
 	<hr color="#006782">
 </body>
+<script type="text/javascript">
+window.onload = function(){
+	flushCode();
+};
+function flushCode(){
+	var imgObj = document.getElementById("codeImg");
+	imgObj.src = "<%=basePath %>system/getCodeImg.do?i=" + Math.random();
+}
+</script>
 </html>
