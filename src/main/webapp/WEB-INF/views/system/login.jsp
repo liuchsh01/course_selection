@@ -12,6 +12,11 @@ String basePath = path + "/";
 .centerDiv{margin:0 auto;display:table}
 .u{text-decoration:underline}
 </style>
+<script language="JavaScript"> 
+if (window != top){
+	top.location.href = location.href;
+}
+</script>
 </head>
 <body>
 	<div style="margin-top:25px;margin-bottom:5px;height:35px;color:red" class="centerDiv">

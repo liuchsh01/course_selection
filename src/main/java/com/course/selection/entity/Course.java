@@ -15,17 +15,19 @@ public class Course {
 
     private String credit;
 
-    private Integer evaluationMode;
+    private Boolean evaluationMode;
 
-    private Integer majorNum;
+    private Integer limitNum;
 
-    private Integer minorNum;
+    private Integer totalNum;
 
-    private Integer creditType;
+    private String weekBlock;
+
+    private Boolean creditType;
 
     private String comment;
 
-    private Integer compulsoryElective;
+    private Long version;
 
     public Integer getCourseId() {
         return courseId;
@@ -83,35 +85,43 @@ public class Course {
         this.credit = credit == null ? null : credit.trim();
     }
 
-    public Integer getEvaluationMode() {
+    public Boolean getEvaluationMode() {
         return evaluationMode;
     }
 
-    public void setEvaluationMode(Integer evaluationMode) {
+    public void setEvaluationMode(Boolean evaluationMode) {
         this.evaluationMode = evaluationMode;
     }
 
-    public Integer getMajorNum() {
-        return majorNum;
+    public Integer getLimitNum() {
+        return limitNum;
     }
 
-    public void setMajorNum(Integer majorNum) {
-        this.majorNum = majorNum;
+    public void setLimitNum(Integer limitNum) {
+        this.limitNum = limitNum;
     }
 
-    public Integer getMinorNum() {
-        return minorNum;
+    public Integer getTotalNum() {
+        return totalNum;
     }
 
-    public void setMinorNum(Integer minorNum) {
-        this.minorNum = minorNum;
+    public void setTotalNum(Integer totalNum) {
+        this.totalNum = totalNum;
     }
 
-    public Integer getCreditType() {
+    public String getWeekBlock() {
+		return weekBlock;
+	}
+
+	public void setWeekBlock(String weekBlock) {
+		this.weekBlock = weekBlock;
+	}
+
+	public Boolean getCreditType() {
         return creditType;
     }
 
-    public void setCreditType(Integer creditType) {
+    public void setCreditType(Boolean creditType) {
         this.creditType = creditType;
     }
 
@@ -123,11 +133,11 @@ public class Course {
         this.comment = comment == null ? null : comment.trim();
     }
 
-    public Integer getCompulsoryElective() {
-        return compulsoryElective;
+    public Long getVersion() {
+        return version;
     }
 
-    public void setCompulsoryElective(Integer compulsoryElective) {
-        this.compulsoryElective = compulsoryElective;
+    public void setVersion(Long version) {
+        this.version = version;
     }
 }

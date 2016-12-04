@@ -8,5 +8,4 @@ import com.course.selection.entity.User;
 
 @Repository
 public class UserDaoImpl extends DaoSupport<User> implements UserDao {
-
 }

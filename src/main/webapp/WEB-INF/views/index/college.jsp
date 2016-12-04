@@ -16,7 +16,7 @@ String basePath = path + "/";
 		List<College> list = (List<College>) request.getAttribute("colleges");
 		for(int i = 0; i < list.size(); i++){
 			College college = list.get(i);
-			out.print("<tr><td><a href='" + basePath + "?collegeId=" + college.getCollegeId() + "' target='course'>");
+			out.print("<tr><td><a href='" + basePath + "search/college.do?id=" + college.getCollegeId() + "' target='course'>");
 			out.print("<font color='#FFFFFF'>" + college.getName() + "</font></a></td></tr>");
 		}
 		%>

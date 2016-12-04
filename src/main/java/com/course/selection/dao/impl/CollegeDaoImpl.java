@@ -8,5 +8,4 @@ import com.course.selection.entity.College;
 
 @Repository
 public class CollegeDaoImpl extends DaoSupport<College> implements CollegeDao {
-
 }
