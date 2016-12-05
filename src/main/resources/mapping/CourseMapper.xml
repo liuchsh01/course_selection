@@ -17,10 +17,40 @@
     <result column="comment" property="comment" jdbcType="VARCHAR" />
     <result column="version" property="version" jdbcType="BIGINT" />
   </resultMap>
+  <resultMap id="resultMapVo" type="com.course.selection.entity.vo.SelectedCourse" >
+    <id column="course_id" property="courseId" jdbcType="INTEGER" />
+    <result column="college_id" property="collegeId" jdbcType="INTEGER" />
+    <result column="course_code" property="courseCode" jdbcType="INTEGER" />
+    <result column="course_name" property="courseName" jdbcType="VARCHAR" />
+    <result column="major_chooser" property="majorChooser" jdbcType="VARCHAR" />
+    <result column="teacher" property="teacher" jdbcType="VARCHAR" />
+    <result column="credit" property="credit" jdbcType="VARCHAR" />
+    <result column="evaluation_mode" property="evaluationMode" jdbcType="BIT" />
+    <result column="limit_num" property="limitNum" jdbcType="INTEGER" />
+    <result column="total_num" property="totalNum" jdbcType="INTEGER" />
+    <result column="week_block" property="weekBlock" jdbcType="VARCHAR" />
+    <result column="credit_type" property="creditType" jdbcType="BIT" />
+    <result column="comment" property="comment" jdbcType="VARCHAR" />
+    <result column="version" property="version" jdbcType="BIGINT" />
+    <result column="compulsory" property="compulsory" jdbcType="BIT" />
+    <result column="nlisten" property="nlisten" jdbcType="BIT" />
+  </resultMap>
   
   <sql id="baseColumnList" >
-    course_id, college_id, course_code, course_name, major_chooser, teacher, credit, 
-    evaluation_mode, limit_num, total_num, week_block, credit_type, comment, version
+    course_id      ,
+    college_id     ,
+	course_code    ,
+	course_name    ,
+	major_chooser  ,
+	teacher        ,
+	credit         ,
+    evaluation_mode,
+    limit_num      ,
+    total_num      ,
+    week_block     ,
+    credit_type    ,
+    comment        ,
+    version
   </sql>
   
   <sql id="whereClause">
@@ -37,6 +67,15 @@
     <include refid="baseColumnList" />
     from course
     <include refid="whereClause" />
+    order by course_id
+  </select>
+  
+  <!-- 按用户id返回已选课程列表 -->
+  <select id="findListByUserId" resultMap="resultMapVo" parameterType="java.lang.Integer" >
+    select
+    <include refid="baseColumnList" />,compulsory,nlisten
+    from (select course_id course_id2,compulsory,nlisten from selection where user_id = #{userId,jdbcType=INTEGER}) selected
+    join course on course_id2 = course_id
     order by course_id
   </select>
   

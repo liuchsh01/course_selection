@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="timePlace" >
-  <resultMap id="BaseResultMap" type="com.course.selection.entity.TimePlace" >
+  <resultMap id="resultMap" type="com.course.selection.entity.TimePlace" >
     <id column="course_id" property="courseId" jdbcType="INTEGER" />
     <id column="week_day" property="weekDay" jdbcType="INTEGER" />
     <id column="class_no" property="classNo" jdbcType="INTEGER" />

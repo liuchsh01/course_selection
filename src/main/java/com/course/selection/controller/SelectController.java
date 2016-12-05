@@ -40,17 +40,36 @@ public class SelectController {
 	@RequestMapping(value="selectCourse.do")
 	public ModelAndView selectCourse(String data){
 		
+		if(data == null)
+			return new ModelAndView("select/info","msg","空操作");
 		//获取 ids
 		String []datas = data.split(",");
 		List<Integer> compulsoryCourseIds = new ArrayList<>();
 		List<Integer> additionalCourseIds = new ArrayList<>();
-		getIds(datas, compulsoryCourseIds, additionalCourseIds);
+		for (int i = 0; i < datas.length; i++) {
+			String[] info = datas[i].split(":");
+			if(info.length == 2){
+				if("0".equals(info[1])){
+					compulsoryCourseIds.add(Integer.parseInt(info[0]));
+				}else if("1".equals(info[1])){
+					additionalCourseIds.add(Integer.parseInt(info[0]));
+				}
+			}
+		}
+		if(compulsoryCourseIds.size() == 0 && additionalCourseIds.size() == 0)
+			return new ModelAndView("select/info","msg","空操作");
 		
 		//获取 本人课表ids
 		User currUser = (User) httpSession.getAttribute("user");
 		Map<String, Object> param = new HashMap<>();
 		param.put("userId", currUser.getUserId());
-		List<Integer> selectedCourseIds = getSelectedIds(param);
+		List<Selection> selectedCourse = selectionService.findList(param);
+		List<Integer> selectedCourseIds = new ArrayList<>();
+		if(selectedCourse != null && selectedCourse.size() > 0){
+			for (int i = 0; i < selectedCourse.size(); i++) {
+				selectedCourseIds.add(selectedCourse.get(i).getCourseId());
+			}
+		}
 		
 		//查找是否有重复选取的课程，如果有，直接返回
 		for (int i = 0; i < selectedCourseIds.size(); i++) {
@@ -66,27 +85,37 @@ public class SelectController {
 			}
 		}
 		
+		List<Integer> newCourseIds = new ArrayList<>();
+		newCourseIds.addAll(compulsoryCourseIds);
+		newCourseIds.addAll(additionalCourseIds);
+		
+		//计算总学分是否超出限选学分
+		
+		
 		//获取 已选课程上课时间 与 选课上课时间
 		param.clear();
-		param.put("collegeIds", compulsoryCourseIds);
-		List<TimePlace> compulsoryTimePlaces = timePlaceSerive.findList(param);
-		param.put("collegeIds", additionalCourseIds);
-		List<TimePlace> additionalTimePlaces = timePlaceSerive.findList(param);
-		param.put("collegeIds", selectedCourseIds);
-		List<TimePlace> SelectedTimePlaces = timePlaceSerive.findList(param);
-		
+		List<TimePlace> newTimePlaces = new ArrayList<>();
+		List<TimePlace> oldTimePlaces = new ArrayList<>();
+		if (newCourseIds.size() > 0) {
+			param.put("collegeIds", newCourseIds);
+			newTimePlaces = timePlaceSerive.findList(param);
+		}
+		if (selectedCourseIds.size() > 0) {
+			param.put("collegeIds", selectedCourseIds);
+			oldTimePlaces = timePlaceSerive.findList(param);
+		}
 		//查找是否有重复的上课时间，如果有，直接返回
-		for (int i = 0; i < SelectedTimePlaces.size(); i++) {
-			for (int j = 0; j < compulsoryTimePlaces.size(); j++) {
-				if(SelectedTimePlaces.get(i).getWeekDay().equals(compulsoryTimePlaces.get(j).getWeekDay()) &&
-						SelectedTimePlaces.get(i).getClassNo().equals(compulsoryTimePlaces.get(j).getClassNo())){
+		for (int i = 0; i < newTimePlaces.size(); i++) {
+			for (int j = 0; j < oldTimePlaces.size(); j++) {
+				if(newTimePlaces.get(i).getWeekDay().equals(oldTimePlaces.get(j).getWeekDay()) &&
+						newTimePlaces.get(i).getClassNo().equals(oldTimePlaces.get(j).getClassNo())){
 					return new ModelAndView("select/info","msg","所选课程与已选课程有时间冲突");
 				}
 			}
-			for (int j = 0; j < additionalTimePlaces.size(); j++) {
-				if(SelectedTimePlaces.get(i).getWeekDay().equals(additionalTimePlaces.get(j).getWeekDay()) &&
-						SelectedTimePlaces.get(i).getClassNo().equals(additionalTimePlaces.get(j).getClassNo())){
-					return new ModelAndView("select/info","msg","所选课程与已选课程有时间冲突");
+			for (int j = 0; j < newTimePlaces.size(); j++) {
+				if(i != j && newTimePlaces.get(i).getWeekDay().equals(newTimePlaces.get(j).getWeekDay()) &&
+						newTimePlaces.get(i).getClassNo().equals(newTimePlaces.get(j).getClassNo())){
+					return new ModelAndView("select/info","msg","所选课程之间有时间冲突");
 				}
 			}
 		}
@@ -133,29 +162,5 @@ public class SelectController {
 			}
 		}
 		return new ModelAndView("redirect:/index/info.do");
-	}
-
-	private List<Integer> getSelectedIds(Map<String, Object> param) {
-		List<Selection> selectedCourse = selectionService.findList(param);
-		List<Integer> selectedCourseIds = new ArrayList<>();
-		if(selectedCourse != null && selectedCourse.size() > 0){
-			for (int i = 0; i < selectedCourse.size(); i++) {
-				selectedCourseIds.add(selectedCourse.get(i).getCourseId());
-			}
-		}
-		return selectedCourseIds;
-	}
-
-	private void getIds(String[] datas, List<Integer> compulsoryCourseIds, List<Integer> additionalCourseIds) {
-		for (int i = 0; i < datas.length; i++) {
-			String[] info = datas[i].split(":");
-			if(info.length == 2){
-				if("0".equals(info[1])){
-					compulsoryCourseIds.add(Integer.parseInt(info[0]));
-				}else if("1".equals(info[1])){
-					additionalCourseIds.add(Integer.parseInt(info[0]));
-				}
-			}
-		}
 	}
 }

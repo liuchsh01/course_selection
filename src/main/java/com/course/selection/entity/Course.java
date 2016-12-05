@@ -13,7 +13,7 @@ public class Course {
 
     private String teacher;
 
-    private String credit;
+    private Double credit;
 
     private Boolean evaluationMode;
 
@@ -77,12 +77,12 @@ public class Course {
         this.teacher = teacher == null ? null : teacher.trim();
     }
 
-    public String getCredit() {
+    public Double getCredit() {
         return credit;
     }
 
-    public void setCredit(String credit) {
-        this.credit = credit == null ? null : credit.trim();
+    public void setCredit(Double credit) {
+        this.credit = credit == null ? 0.0 : credit;
     }
 
     public Boolean getEvaluationMode() {
