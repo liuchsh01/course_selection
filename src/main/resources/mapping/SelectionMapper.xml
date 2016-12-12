@@ -15,7 +15,9 @@
   <sql id="whereClause">
   	where 1=1
   	<if test="userId != null and userId != ''"><![CDATA[ and user_id = #{userId}]]></if>
+  	<if test="courseId !=null and courseId != ''"><![CDATA[ and course_id = #{courseId}]]></if>
   </sql>
+  
   <!-- 剩余学位、上课时间  需链接新表 暂不处理 -->
   <select id="findList" resultMap="resultMap" parameterType="java.util.Map" >
     select
@@ -23,20 +25,36 @@
     from selection
     <include refid="whereClause" />
   </select>
-  <delete id="delete" parameterType="com.course.selection.entity.Selection" >
+  
+  <delete id="deleteByEntity" parameterType="com.course.selection.entity.Selection" >
     delete from selection
     where user_id = #{userId,jdbcType=INTEGER}
       and course_id = #{courseId,jdbcType=INTEGER}
-  </delete>
-  <insert id="insert" parameterType="com.course.selection.entity.Selection" >
-    insert into selection (
+  </delete>  
+  
+  <insert id="save" parameterType="com.course.selection.entity.Selection" >
+    insert into selection 
+    (
     	user_id, course_id, nlisten, compulsory
     )
-    values (
+    values 
+    (
 	    #{userId,jdbcType=INTEGER}, 
 	    #{courseId,jdbcType=INTEGER}, 
 	    #{nlisten,jdbcType=BIT}, 
 	    #{compulsory,jdbcType=BIT}
 	)
   </insert>
+  
+  <update id="updateByMap" parameterType="java.util.Map">
+  	UPDATE selection
+  	SET 
+  	course_id = #{update_courseId, jdbcType=INTEGER},
+  	nlisten = #{update_nlisten, jdbcType=BIT},
+  	compulsory = #{update_compulsory, jdbcType=BIT}
+  	WHERE
+  	user_id = #{where_userId, jdbcType=INTEGER}
+  	AND
+  	course_id = #{where_courseId, jdbcType=INTEGER}
+  </update>
 </mapper>

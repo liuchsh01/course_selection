@@ -31,7 +31,11 @@ public abstract class ServiceSupport<E> implements Service<E> {
     public void deleteById(Integer id) {
         dao.deleteById(id);
     }
-
+    
+    public void deleteByEntity(E view){
+    	dao.deleteByEntity(view);
+    }
+    
     public void update(E view) {
         dao.update(view);
     }

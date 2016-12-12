@@ -6,19 +6,16 @@
     <id column="week_day" property="weekDay" jdbcType="INTEGER" />
     <id column="class_no" property="classNo" jdbcType="INTEGER" />
     <result column="place" property="place" jdbcType="VARCHAR" />
+    <result column="num" property="num" jdbcType="INTEGER" />
   </resultMap>
   
   <sql id="baseColumnList" >
-    course_id, week_day, class_no, place
+    course_id, week_day, class_no, place ,num
   </sql>
   
   <sql id="whereClause">
   	where 1=1
-  	<if test="collegeIds != null and collegeIds.size() > 0"><![CDATA[ and college_id in ]]>
-  		<foreach collection="collegeIds" item="collegeId" open="(" separator="," close=")">
-    		#{collegeId}
-        </foreach>
-  	</if>
+  	<if test="courseId != null and courseId != ''"><![CDATA[ and course_id = #{courseId}]]></if>
   </sql>
   
   <select id="findList" resultMap="resultMap" parameterType="java.util.Map" >

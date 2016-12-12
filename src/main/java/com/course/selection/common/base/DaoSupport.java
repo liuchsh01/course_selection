@@ -67,7 +67,11 @@ public abstract class DaoSupport<E> implements Dao<E> {
     public void deleteById(Integer id) {
         delete(getStatementId(SUFFIX_DELETE_BY_ID), id);
     }
-
+     
+    public void deleteByEntity(E entity){
+    	getSqlSession().delete(getStatementId(SUFFIX_DELETE_BY_ENTITY), entity);
+    }
+    
     public void delete(String statement, Object parameter) {
         getSqlSession().delete(statement, parameter);
     }
@@ -79,7 +83,12 @@ public abstract class DaoSupport<E> implements Dao<E> {
     public void update(String statementName, Object parameterObject) {
         getSqlSession().update(statementName, parameterObject);
     }
-
+    
+    @Override
+    public void updateByMap(Map<String, Object> map){
+    	getSqlSession().update(getStatementId(SUFFIX_UPDATE_BY_MAP), map);
+    }
+    
     @SuppressWarnings( "unchecked" )
     public E findById(Object id) {
         return (E) getSqlSession().selectOne(getStatementId(SUFFIX_FIND_BY_ID), id);

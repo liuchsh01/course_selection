@@ -11,7 +11,9 @@ public interface Service<E> {
     public void saveEntityList(List<E> list);
 
     public void deleteById(Integer id);
-
+    
+    public void deleteByEntity(E view);
+    
     public void update(E view);
 
     public void updateEntityList(List<E> list);

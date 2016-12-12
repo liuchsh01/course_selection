@@ -6,7 +6,7 @@ public class TimePlaceKey {
     private Integer weekDay;
 
     private Integer classNo;
-
+    
     public Integer getCourseId() {
         return courseId;
     }
