@@ -8,7 +8,7 @@
     <result column="course_name" property="courseName" jdbcType="VARCHAR" />
     <result column="major_chooser" property="majorChooser" jdbcType="VARCHAR" />
     <result column="teacher" property="teacher" jdbcType="VARCHAR" />
-    <result column="credit" property="credit" jdbcType="VARCHAR" />
+    <result column="credit" property="credit" jdbcType="DECIMAL" />
     <result column="evaluation_mode" property="evaluationMode" jdbcType="BIT" />
     <result column="limit_num" property="limitNum" jdbcType="INTEGER" />
     <result column="total_num" property="totalNum" jdbcType="INTEGER" />
@@ -79,10 +79,31 @@
     order by course_id
   </select>
   
-  <update id="updateWithVersion" parameterType="com.course.selection.entity.Course" >
+  <select id="findListByCourseIds" resultMap="resultMapVo" parameterType="java.util.List" >
+    select
+    <include refid="baseColumnList" />,compulsory,nlisten
+    from (select course_id course_id2,compulsory,nlisten from selection where cuorse_id in 
+	<foreach collection="courseIds" item="cuorseId" index="index" open="(" close=")" separator=",">
+		#{cuorseId,jdbcType=INTEGER}
+	</foreach>) selected
+    join course on course_id2 = course_id
+    order by course_id
+  </select>
+  
+  <update id="totalNumIncreaseWithVersion" parameterType="com.course.selection.entity.Course" >
     update course
     set
       total_num + 1,
+      version + 1,
+    where
+      course_id = #{courseId,jdbcType=INTEGER} and
+      version = #{version,jdbcType=BIGINT}
+  </update>
+  
+  <update id="totalNumDecreaseWithVersion" parameterType="com.course.selection.entity.Course" >
+    update course
+    set
+      total_num - 1,
       version + 1,
     where
       course_id = #{courseId,jdbcType=INTEGER} and

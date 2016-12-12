@@ -18,12 +18,22 @@ public class CourseServiceImpl extends ServiceSupport<Course> implements CourseS
 	private CourseDao courseDao;
 	
 	@Override
-	public Integer updateWithVersion(Course course) {
-		return courseDao.updateWithVersion(course);
+	public Integer totalNumIncreaseWithVersion(Course course) {
+		return courseDao.totalNumIncreaseWithVersion(course);
+	}
+
+	@Override
+	public Integer totalNumDecreaseWithVersion(Course course) {
+		return courseDao.totalNumDecreaseWithVersion(course);
 	}
 
 	@Override
 	public List<SelectedCourse> findListByUserId(Integer userId) {
 		return courseDao.findListByUserId(userId);
+	}
+
+	@Override
+	public List<SelectedCourse> findListByCourseIds(List<Integer> courseIds) {
+		return courseDao.findListByCourseIds(courseIds);
 	}
 }

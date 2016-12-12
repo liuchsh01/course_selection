@@ -13,14 +13,26 @@ import com.course.selection.entity.vo.SelectedCourse;
 public class CourseDaoImpl extends DaoSupport<Course> implements CourseDao {
 	
 	@Override
-	public Integer updateWithVersion(Course course) {
-		Integer result = getSqlSession().update(getStatementId(".updateWithVersion"), course);
+	public Integer totalNumIncreaseWithVersion(Course course) {
+		Integer result = getSqlSession().update(getStatementId(".totalNumIncreaseWithVersion"), course);
+		return result;
+	}
+
+	@Override
+	public Integer totalNumDecreaseWithVersion(Course course) {
+		Integer result = getSqlSession().update(getStatementId(".totalNumDecreaseWithVersion"), course);
 		return result;
 	}
 
 	@Override
 	public List<SelectedCourse> findListByUserId(Integer userId) {
 		List<SelectedCourse> list = getSqlSession().selectList(getStatementId(".findListByUserId"),userId);
+		return list;
+	}
+
+	@Override
+	public List<SelectedCourse> findListByCourseIds(List<Integer> courseIds) {
+		List<SelectedCourse> list = getSqlSession().selectList(getStatementId(".findListByCourseIds"),courseIds);
 		return list;
 	}
 }

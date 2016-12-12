@@ -60,5 +60,17 @@ function check_select(){
 		parent.result.location.href="<%=basePath %>select/selectCourse.do?data=" + data.toString();
 	}
 }
+function check_revoke(){
+	var arr = parent.result.document.getElementsByName("course_no");
+	var data = new Array();
+	for(var i = 0; i < arr.length; i++){
+		if(arr[i].checked){
+			data.push(arr[i].value);
+		}
+	}
+	if(data.length > 0){
+		parent.result.location.href="<%=basePath %>select/disselectCourse.do?data=" + data.toString();
+	}
+}
 </script>
 </html>

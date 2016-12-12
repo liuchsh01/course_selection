@@ -8,7 +8,11 @@ import com.course.selection.entity.vo.SelectedCourse;
 
 public interface CourseDao extends Dao<Course> {
 
-	Integer updateWithVersion(Course course);
+	Integer totalNumIncreaseWithVersion(Course course);
+
+	Integer totalNumDecreaseWithVersion(Course course);
 
 	List<SelectedCourse> findListByUserId(Integer userId);
+
+	List<SelectedCourse> findListByCourseIds(List<Integer> courseIds);
 }
