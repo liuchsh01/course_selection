@@ -31,8 +31,8 @@ public class CourseDaoImpl extends DaoSupport<Course> implements CourseDao {
 	}
 
 	@Override
-	public List<SelectedCourse> findListByCourseIds(List<Integer> courseIds) {
-		List<SelectedCourse> list = getSqlSession().selectList(getStatementId(".findListByCourseIds"),courseIds);
+	public List<Course> findListByCourseIds(List<Integer> courseIds) {
+		List<Course> list = getSqlSession().selectList(getStatementId(".findListByCourseIds"),courseIds);
 		return list;
 	}
 }
