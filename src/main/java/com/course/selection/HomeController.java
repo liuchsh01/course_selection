@@ -14,7 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.course.selection.entity.A;
+import com.course.selection.entity.College;
 import com.course.selection.service.CollegeService;
 
 /**
@@ -34,7 +34,7 @@ public class HomeController {
 	public String home(Locale locale, Model model) {
 		logger.info("Welcome home! The client locale is {}.", locale);
 		
-		List<A> list= aService.findList(new HashMap<String, Object>());
+		List<College> list= aService.findList(new HashMap<String, Object>());
 		
 		Date date = new Date();
 		DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, locale);

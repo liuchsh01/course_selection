@@ -83,7 +83,7 @@
     select
     <include refid="baseColumnList" />,compulsory,nlisten
     from (select course_id course_id2,compulsory,nlisten from selection where cuorse_id in 
-	<foreach collection="courseIds" item="cuorseId" index="index" open="(" close=")" separator=",">
+	<foreach collection="list" item="cuorseId" index="index" open="(" close=")" separator=",">
 		#{cuorseId,jdbcType=INTEGER}
 	</foreach>) selected
     join course on course_id2 = course_id

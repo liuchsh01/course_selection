@@ -30,12 +30,18 @@
 			<td><input type="button" name="action6" value="清除" onclick="clear_selected()" style="color: #008000"></td>
 			<td><input type="button" value="黄牌预警" onclick="javascript:window.open('hpyj.htm','newwin','width=860,height=600,scrollbars=yes');" style="color: #008000"></td>
 			<td><input type="button" name="action7" value="个人信息" onclick="info()" style="color: #008000"></td>
+			<td><a href="<%=basePath %>changeCourse/showChange.do" target="course"><input type="button" value="课程交换" style="color: #008000"></a></td> 
 			<td><input type="button" name="action8" value="ʹ使用说明" onclick="op_help()" style="color: #008000"></td>
 			<td><input type="button" name="action9" value="退出" onclick="quit_sys()" style="color: #008000"></td>
 		</table>
 	</form>
 </body>
 <script type="text/javascript">
+
+function change_list(){
+	parent.info.location.href=<%=basePath %>+"changeCourse/showChange.do";
+}
+
 function check_search(){
 	var type = document.getElementsByName("searchType")[0].value;
 	var text = document.getElementsByName("searchText")[0].value;

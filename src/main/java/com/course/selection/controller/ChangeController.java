@@ -8,13 +8,16 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.course.selection.entity.User;
+import com.course.selection.entity.Change;
 import com.course.selection.entity.Selection;
-
+import com.course.selection.entity.TimePlace;
+import com.course.selection.service.ChangeService;
 import com.course.selection.service.SelectionService;
 import com.course.selection.service.TimePlaceService;
 
@@ -29,6 +32,9 @@ public class ChangeController {
     private TimePlaceService timePlaceService;
     
     @Autowired
+    private ChangeService changeService;
+    
+    @Autowired
 	private HttpSession httpSession;
     
     @RequestMapping(value="test.do")
@@ -36,12 +42,119 @@ public class ChangeController {
     	return "change/test";
     }
     
+    @RequestMapping(value="showChange.do")
+    public ModelAndView showChange(){
+    	User user = (User)httpSession.getAttribute("user");
+    	List<Change> changeList = changeService.findListByUserId(user.getUserId());
+    	return new ModelAndView("change/show","changeList",changeList);
+    }
+    
+    @RequestMapping(value="changeRequest.do")
+    @ResponseBody
+    public Map<String,String> changeRequest(@RequestParam(value="out_courseId") Integer out_courseId, @RequestParam(value="in_courseId") Integer in_courseId){
+    	Map<String, String> info = new HashMap<>();
+    	String msg="";
+    	int i,j;    //循环变量
+    	Map<String, Object> params = new HashMap<>();
+    	int[][] timetable = new int[12][7];
+    	
+    	User user = (User) httpSession.getAttribute("user");
+    	
+    	params.put("userId", user.getUserId());
+    	params.put("out_courseId", out_courseId);
+    	if(changeService.findListByMap(params).size() != 0){
+    		msg = "这门课已经在交换申请列表了";
+    		info.put("msg", msg);
+    		return info;
+    	}
+    	
+    	params.clear();
+    	params.put("userId", user.getUserId());
+    	
+    	List<Selection> my_selection = selectionService.findList(params);
+    	
+    	for(i=0; i<my_selection.size(); i++){
+    		if(my_selection.get(i).getCourseId() == out_courseId){
+    			msg = "你已经有这门课了";
+    			info.put("msg", msg);
+    			return info;
+    		}
+    	}
+    	
+    	timetable = selectionService.buildTimetable(my_selection);
+    	
+    	int weekDay, classNo, num, count;
+    	
+    	params.clear();
+    	params.put("courseId", out_courseId);
+    	
+    	//获得交换出去的课程的TimePlace
+    	
+    	List<TimePlace> timePlace = timePlaceService.findList(params);
+    	
+    	count = timePlace.size();
+    	
+    	//在课程表删除将要交换出去的课程的记录
+    	for(i=0; i<count; i++){
+    		weekDay = timePlace.get(i).getWeekDay();
+    		classNo = timePlace.get(i).getClassNo();
+    		num = timePlace.get(i).getNum();
+    		
+    		for(j=0; j<num; j++){
+    			timetable[classNo+j-1][weekDay-1] = 0;
+    		}
+    	}
+    	
+    	int conflict = 0; //没有冲突等于0
+    	
+        params.put("courseId", in_courseId);
+        
+        //获得交换进来的课程的TimePlace
+        
+        timePlace = timePlaceService.findList(params);
+        
+        count = timePlace.size();
+        
+        //检查是否冲突
+        
+        for(i=0; i<count; i++){
+        	weekDay = timePlace.get(i).getWeekDay();
+        	classNo = timePlace.get(i).getClassNo();
+        	num = timePlace.get(i).getNum();
+        	
+        	for(j=0; j<num; j++){
+        		if(timetable[classNo+j-1][weekDay-1] == 1){
+        			conflict = 1;
+        			break;
+        		}
+        	}
+        }
+    	
+        if(conflict == 1){
+        	msg = "课程有冲突";
+        	info.put("msg", msg);
+        }
+        else{
+        	Change change = new Change();
+        	change.setUserId(user.getUserId());
+        	change.setInCourseId(in_courseId);
+        	change.setOutCourseId(out_courseId);
+        	
+        	//保存该课程交换请求
+        	changeService.save(change);
+        	msg = "课程交换申请成功";
+        	info.put("msg", msg);
+        }
+        
+    	return info;
+    }
+    
 	@RequestMapping(value="changeCourse.do")
 	public ModelAndView changeCourse(@RequestParam(value="out_courseId") Integer out_courseId , @RequestParam(value="in_courseId") Integer in_courseId,@RequestParam(value="out_userId") Integer out_userId){   
 		
 		//out_courseId 换出去的课程 ， in_courseId换进来的课程
 		
-		int i;
+		int i,j;
         String msg;
 		
 		Map<String, Object> params = new HashMap<>();
@@ -75,42 +188,63 @@ public class ChangeController {
 		params.clear();
 		params.put("courseId", out_courseId);
 		
-		//获得将要交换出去的课程的weekDay、classNo、num
-		int out_weekDay = timePlaceService.findList(params).get(0).getWeekDay(); 
-		int out_classNo = timePlaceService.findList(params).get(0).getClassNo(); 
-		int out_num = timePlaceService.findList(params).get(0).getNum();         
+		// TODO 考虑count
 		
-		//在用户的课程表中删除要交换出去的课
-		for(i=0 ; i<out_num ; i++)
-			timetable[out_classNo+i-1][out_weekDay-1] = 0 ;   
+		int count;
+		count = timePlaceService.findList(params).size();
 		
+		for(i=0; i<count; i++){
+			//获得将要交换出去的课程的weekDay、classNo、num
+			int out_weekDay = timePlaceService.findList(params).get(i).getWeekDay(); 
+			int out_classNo = timePlaceService.findList(params).get(i).getClassNo(); 
+			int out_num = timePlaceService.findList(params).get(i).getNum(); 
+			
+			//在用户的课程表中删除要交换出去的课
+			for(j=0 ; j<out_num ; j++)
+				timetable[out_classNo+j-1][out_weekDay-1] = 0 ; 
+		}
+			 		
 		params.clear();
 		params.put("courseId", in_courseId);
 		
-		//获得将要交换进来的课程的weekDay、classNo、num
-		int in_weekDay = timePlaceService.findList(params).get(0).getWeekDay();    
-		int in_classNo = timePlaceService.findList(params).get(0).getClassNo();     
-		int in_num = timePlaceService.findList(params).get(0).getNum();             
-		
 		int conflict = 0;  // 没有冲突等于0
+	
+		count = timePlaceService.findList(params).size();
+		
+		for(i=0; i<count; i++){
+			//获得将要交换进来的课程的weekDay、classNo、num
+			int in_weekDay = timePlaceService.findList(params).get(i).getWeekDay();    
+			int in_classNo = timePlaceService.findList(params).get(i).getClassNo();     
+			int in_num = timePlaceService.findList(params).get(i).getNum();
+		
+			for(j=0 ; j < in_num ; j++){
+				if(timetable[in_classNo+j-1][in_weekDay-1] == 1) {
+					conflict = 1 ;
+					break;
+				}		
+			}
+			
+			if(conflict == 1)
+				break;
+		}
 		
 		//检查课程有无冲突
-		for(i=0 ; i < in_num ; i++){
-			if(timetable[in_classNo+i-1][in_weekDay-1] == 1) {
-				conflict = 1 ;
-				break;
-			}		
-		} 
-		
 		if(conflict == 1){
 			msg = "课程冲突";
 			return new ModelAndView("change/info", "msg", msg);
 		}
 		else{
-			//在数据库修改选课表
+			//修改选课表数据
 			msg = selectionService.changeDatabase(out_courseId, in_courseId, out_userId);
+			//修改change_request表数据
+			Change change = new Change();
+			change.setUserId(out_userId);
+			change.setOutCourseId(in_courseId);
+			changeService.deleteByEntity(change);
 		}
 			
+		//TODO 修改Change表数据
+		
 		
 		return new ModelAndView("change/info", "msg", msg);
 	}

@@ -108,11 +108,11 @@ public class SelectController {
 		List<TimePlace> newTimePlaces = new ArrayList<>();
 		List<TimePlace> oldTimePlaces = new ArrayList<>();
 		if (newCourseIds.size() > 0) {
-			param.put("collegeIds", newCourseIds);
+			param.put("courseIds", newCourseIds);
 			newTimePlaces = timePlaceService.findList(param);
 		}
 		if (selectedCourseIds.size() > 0) {
-			param.put("collegeIds", selectedCourseIds);
+			param.put("courseIds", selectedCourseIds);
 			oldTimePlaces = timePlaceService.findList(param);
 		}
 		
