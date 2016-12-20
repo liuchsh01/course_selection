@@ -16,10 +16,10 @@
   <sql id="whereClause">
   	where 1=1
   	<if test="courseId != null and courseId != ''"><![CDATA[ and course_id = #{courseId}]]></if>
-  	<if test="courseIds != null and courseIds.size() > 0"><![CDATA[ and course_id in ]]>
-  		<foreach collection="courseIds" item="courseId" open="(" separator="," close=")">
-    		#{courseId}
-        </foreach>
+  	<if test="courseIds != null and courseIds.size() > 0"><![CDATA[ and course_id in]]>
+  		<foreach collection="courseIds" item="cuorseId" index="index" open="(" close=")" separator=",">
+			#{cuorseId,jdbcType=INTEGER}
+		</foreach>
   	</if>
   </sql>
   

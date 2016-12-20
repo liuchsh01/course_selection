@@ -56,6 +56,7 @@
   <sql id="whereClause">
   	where 1=1
   	<if test="collegeId != null and collegeId != ''"><![CDATA[ and college_id = #{collegeId}]]></if>
+  	<if test="courseId != null and courseId != ''"><![CDATA[ and course_id = #{courseId}]]></if>
   	<if test="courseCode != null and courseCode != ''"><![CDATA[ and course_code = #{courseCode}]]></if>
   	<if test="courseName != null and courseName != ''"><![CDATA[ and course_name like CONCAT('%', #{courseName},'%')]]></if>
   	<if test="majorChooser != null and majorChooser != ''"><![CDATA[ and major_chooser like CONCAT('%', #{majorChooser},'%')]]></if>
@@ -79,22 +80,22 @@
     order by course_id
   </select>
   
-  <select id="findListByCourseIds" resultMap="resultMapVo" parameterType="java.util.List" >
+  <select id="findListByCourseIds" resultMap="resultMap" parameterType="java.util.List" >
     select
-    <include refid="baseColumnList" />,compulsory,nlisten
-    from (select course_id course_id2,compulsory,nlisten from selection where cuorse_id in 
+    <include refid="baseColumnList"/>
+    from course 
+	where course_id in 
 	<foreach collection="list" item="cuorseId" index="index" open="(" close=")" separator=",">
 		#{cuorseId,jdbcType=INTEGER}
-	</foreach>) selected
-    join course on course_id2 = course_id
+	</foreach>
     order by course_id
   </select>
   
   <update id="totalNumIncreaseWithVersion" parameterType="com.course.selection.entity.Course" >
     update course
     set
-      total_num + 1,
-      version + 1,
+      total_num = total_num + 1,
+      version = version + 1
     where
       course_id = #{courseId,jdbcType=INTEGER} and
       version = #{version,jdbcType=BIGINT}
@@ -103,8 +104,8 @@
   <update id="totalNumDecreaseWithVersion" parameterType="com.course.selection.entity.Course" >
     update course
     set
-      total_num - 1,
-      version + 1,
+      total_num = total_num - 1,
+      version = version + 1
     where
       course_id = #{courseId,jdbcType=INTEGER} and
       version = #{version,jdbcType=BIGINT}

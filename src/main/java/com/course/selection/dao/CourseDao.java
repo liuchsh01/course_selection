@@ -14,5 +14,5 @@ public interface CourseDao extends Dao<Course> {
 
 	List<SelectedCourse> findListByUserId(Integer userId);
 
-	List<SelectedCourse> findListByCourseIds(List<Integer> courseIds);
+	List<Course> findListByCourseIds(List<Integer> courseIds);
 }
