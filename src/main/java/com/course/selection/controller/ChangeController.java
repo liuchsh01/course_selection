@@ -1,5 +1,6 @@
 package com.course.selection.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,9 +16,12 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.course.selection.entity.User;
 import com.course.selection.entity.Change;
+import com.course.selection.entity.Course;
 import com.course.selection.entity.Selection;
 import com.course.selection.entity.TimePlace;
+import com.course.selection.entity.ChangList;
 import com.course.selection.service.ChangeService;
+import com.course.selection.service.CourseService;
 import com.course.selection.service.SelectionService;
 import com.course.selection.service.TimePlaceService;
 
@@ -35,6 +39,9 @@ public class ChangeController {
     private ChangeService changeService;
     
     @Autowired
+    private CourseService courseService;
+    
+    @Autowired
 	private HttpSession httpSession;
     
     @RequestMapping(value="test.do")
@@ -46,7 +53,74 @@ public class ChangeController {
     public ModelAndView showChange(){
     	User user = (User)httpSession.getAttribute("user");
     	List<Change> changeList = changeService.findListByUserId(user.getUserId());
-    	return new ModelAndView("change/show","changeList",changeList);
+    	List<ChangList> changeInfo = new ArrayList<>();
+    	for(int i=0; i<changeList.size(); i++){
+    		 ChangList cl = new ChangList();
+    		 Map<String, Object> params = new HashMap<>();
+    		 
+    		 cl.setOut_userId(changeList.get(i).getUserId());
+    		 
+    		 params.put("courseId", changeList.get(i).getInCourseId());
+    		 List<Course> courseInfo = courseService.findList(params);
+    		 
+    		 cl.setOut_courseCode(courseInfo.get(0).getCourseCode());
+    		 cl.setOut_courseName(courseInfo.get(0).getCourseName());
+    		 cl.setOut_courseId(courseInfo.get(0).getCourseId());
+    		 
+    		 List<TimePlace> time_place = timePlaceService.findList(params);
+    		 int weekday,classNo,num;
+    		 String tp;
+    		 weekday = time_place.get(0).getWeekDay();
+    		 classNo = time_place.get(0).getClassNo();
+    		 num = time_place.get(0).getNum();
+    		 
+    		 tp = "周"+weekday+"第";
+    		 
+    		 for(int j=0; j<num ;j++){
+    			 int snum = classNo+j;
+    			 if(j == (num-1)){
+    				 tp = tp+snum;
+    			 }else{
+    			 tp = tp+snum+',';
+    			 }
+    		 }
+    		 
+    		 tp = tp+'节';
+    		 
+    		 cl.setOut_time(tp);
+    		 
+    		 params.clear();
+    		 params.put("courseId", changeList.get(i).getOutCourseId());
+    		 courseInfo = courseService.findList(params);
+    		 
+    		 cl.setin_courseCode(courseInfo.get(0).getCourseCode());
+    		 cl.setin_courseName(courseInfo.get(0).getCourseName());
+    		 cl.setin_courseId(courseInfo.get(0).getCourseId());
+    		 
+    		 time_place = timePlaceService.findList(params);
+    		 weekday = time_place.get(0).getWeekDay();
+    		 classNo = time_place.get(0).getClassNo();
+    		 num = time_place.get(0).getNum();
+    		 
+    		 tp = "周"+weekday+"第";
+    		 
+    		 for(int j=0; j<num ;j++){
+    			 int snum = classNo+j;
+    			 if(j == (num-1)){
+    				 tp = tp+snum;
+    			 }else{
+    			 tp = tp+snum+',';
+    			 }
+    		 }
+    		 
+    		 tp = tp+'节';
+    		 
+    		 cl.setin_time(tp);
+    		 
+    		 changeInfo.add(cl);
+    	     
+    	}
+    	return new ModelAndView("change/show","changeInfo",changeInfo);
     }
     
     @RequestMapping(value="changeRequest.do")
@@ -74,7 +148,7 @@ public class ChangeController {
     	List<Selection> my_selection = selectionService.findList(params);
     	
     	for(i=0; i<my_selection.size(); i++){
-    		if(my_selection.get(i).getCourseId() == out_courseId){
+    		if(my_selection.get(i).getCourseId() == in_courseId){
     			msg = "你已经有这门课了";
     			info.put("msg", msg);
     			return info;
@@ -149,13 +223,16 @@ public class ChangeController {
     	return info;
     }
     
+    
 	@RequestMapping(value="changeCourse.do")
-	public ModelAndView changeCourse(@RequestParam(value="out_courseId") Integer out_courseId , @RequestParam(value="in_courseId") Integer in_courseId,@RequestParam(value="out_userId") Integer out_userId){   
+	@ResponseBody
+	public Map<String, Object> changeCourse(@RequestParam(value="out_courseId") Integer out_courseId , @RequestParam(value="in_courseId") Integer in_courseId,@RequestParam(value="out_userId") Integer out_userId){   
 		
 		//out_courseId 换出去的课程 ， in_courseId换进来的课程
 		
 		int i,j;
         String msg;
+        Map<String, Object> info = new HashMap<>();
 		
 		Map<String, Object> params = new HashMap<>();
 		params.put("courseId", out_courseId);
@@ -169,7 +246,8 @@ public class ChangeController {
 				break;
 			else{
 				msg = "你没有这门课可供交换";
-				return new ModelAndView("change/info", "msg", msg);
+				info.put("msg", msg);
+				return info;
 			}
 				
 		}		
@@ -231,7 +309,8 @@ public class ChangeController {
 		//检查课程有无冲突
 		if(conflict == 1){
 			msg = "课程冲突";
-			return new ModelAndView("change/info", "msg", msg);
+			info.put("msg", msg);
+			return info;
 		}
 		else{
 			//修改选课表数据
@@ -245,8 +324,9 @@ public class ChangeController {
 			
 		//TODO 修改Change表数据
 		
+		info.put("msg", msg);
 		
-		return new ModelAndView("change/info", "msg", msg);
+		return info;
 	}
 	
 }

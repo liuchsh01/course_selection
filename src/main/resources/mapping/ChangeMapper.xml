@@ -21,7 +21,7 @@
   </select>
   
   <select id="findListByUserId" resultMap="resultMap" parameterType="java.lang.Integer">
-  	select a.in_course_id,a.out_course_id 
+  	select a.user_id,a.in_course_id,a.out_course_id 
   	from change_request a
   	inner join
   	selection b

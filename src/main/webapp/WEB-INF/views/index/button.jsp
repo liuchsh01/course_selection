@@ -38,10 +38,6 @@
 </body>
 <script type="text/javascript">
 
-function change_list(){
-	parent.info.location.href=<%=basePath %>+"changeCourse/showChange.do";
-}
-
 function check_search(){
 	var type = document.getElementsByName("searchType")[0].value;
 	var text = document.getElementsByName("searchText")[0].value;
