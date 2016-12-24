@@ -55,4 +55,9 @@ public class IndexController {
 	public ModelAndView button(){
 		return new ModelAndView("index/button");
 	}
+	
+	@RequestMapping(value="help.do")
+	public ModelAndView help(){
+		return new ModelAndView("index/help");
+	}
 }

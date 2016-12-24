@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html;charset=utf-8"
-	pageEncoding="utf-8" import="java.util.List,com.course.selection.entity.Course"%>
+	pageEncoding="utf-8" import="java.util.List,com.course.selection.entity.Course,java.util.Map,com.course.selection.entity.TimePlace"%>
 <%
 String path = request.getContextPath();
 String basePath = path + "/";
@@ -30,10 +30,10 @@ String basePath = path + "/";
 			</tr>
 		</thead>
 		<%
-		List<Course> list = (List<Course>) request.getAttribute("courses");
-		for(int i = 0; i < list.size(); i++){
-			
-			Course course = list.get(i);
+		String[] weekdays = {"周日","周一","周二","周三","周四","周五","周六"};
+		List<Course> courses = (List<Course>) request.getAttribute("courses");
+		Map<Integer, List<TimePlace>> timePlaces = (Map<Integer, List<TimePlace>>) request.getAttribute("timePlaces");
+		for (Course course : courses){
 			out.print("<tr>");
 			out.print("<td><input type='checkbox' name='no_type' value='" + course.getCourseId() + ":0'></td>");
 			out.print("<td><input type='checkbox' name='no_type' value='" + course.getCourseId() + ":1'></td>");
@@ -48,8 +48,28 @@ String basePath = path + "/";
 			}else{
 				out.print("<td>过程考核为主型</td>");
 			}
-			out.print("<td><img src='" + basePath + "static/img/ifind.jpg' onclick='window.open(&quot;" + basePath + "search/courseCount.do?courseId=" + course.getCourseId() + "&quot;,&quot;count&quot;,&quot;width=420,height=200&quot;)'></td>");
-			out.print("<td></td>");
+			out.print("<td><img src='" + basePath + "static/img/ifind.jpg' onclick='window.open(&quot;" + basePath + "search/courseCount.do?id=" + course.getCourseId() + "&quot;,&quot;count&quot;,&quot;width=420,height=200&quot;)'></td>");
+			out.print("<td>");
+			
+			List<TimePlace> list = timePlaces.get(course.getCourseId());
+			if(list != null && list.size() != 0){
+				for (int i = 0; i < list.size(); i++){
+					TimePlace timePlace = list.get(i);
+					if(i != 0){
+						out.print(";");
+					}
+					out.print(weekdays[timePlace.getWeekDay() % 7]);
+					for (int j = 0; j < timePlace.getNum(); j++){
+						if(j != 0){
+							out.print(",");
+						}
+						out.print(timePlace.getClassNo() + j);
+					}
+					out.print("(" + timePlace.getPlace() + ")");
+				}
+			}
+			
+			out.print("</td>");
 
 			out.print("<td>" + course.getWeekBlock() + "</td>");
 			if(course.getCreditType() != null && course.getCreditType()){

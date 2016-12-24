@@ -61,6 +61,7 @@
   	<if test="courseName != null and courseName != ''"><![CDATA[ and course_name like CONCAT('%', #{courseName},'%')]]></if>
   	<if test="majorChooser != null and majorChooser != ''"><![CDATA[ and major_chooser like CONCAT('%', #{majorChooser},'%')]]></if>
   	<if test="teacher != null and teacher != ''"><![CDATA[ and teacher = #{teacher}]]></if>
+  	<if test="remain != null and remain != ''"><![CDATA[ and limit_num > total_num]]></if>
   </sql>
   <!-- 剩余学位、上课时间  需链接新表 暂不处理 -->
   <select id="findList" resultMap="resultMap" parameterType="java.util.Map" >
