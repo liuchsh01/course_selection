@@ -125,12 +125,14 @@ public class ChangeController {
     
     @RequestMapping(value="changeRequest.do")
     @ResponseBody
-    public Map<String,String> changeRequest(@RequestParam(value="out_courseId") Integer out_courseId, @RequestParam(value="in_courseId") Integer in_courseId){
+    public Map<String,String> changeRequest(@RequestParam(value="out_courseId") Integer out_courseId, @RequestParam(value="in_courseCode") Integer in_courseCode){
     	Map<String, String> info = new HashMap<>();
     	String msg="";
     	int i,j;    //循环变量
     	Map<String, Object> params = new HashMap<>();
     	int[][] timetable = new int[12][7];
+    	
+    	int in_courseId = courseService.findListByCourseCode(in_courseCode).get(0).getCourseId();
     	
     	User user = (User) httpSession.getAttribute("user");
     	

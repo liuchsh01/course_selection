@@ -35,4 +35,10 @@ public class CourseDaoImpl extends DaoSupport<Course> implements CourseDao {
 		List<Course> list = getSqlSession().selectList(getStatementId(".findListByCourseIds"),courseIds);
 		return list;
 	}
+
+	@Override
+	public List<Course> findListByCourseCode(Integer courseCode) {
+		List<Course> list = getSqlSession().selectList(getStatementId(".findListByCourseCode"),courseCode);
+		return list;
+	}
 }

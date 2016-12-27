@@ -13,4 +13,6 @@ public interface CourseService extends Service<Course>{
 	String selectCourse(List<Integer> compulsoryCourseIds, List<Integer> additionalCourseIds);
 	
 	void disselectCourse(List<Integer> disselectCourseIds);
+	
+	List<Course> findListByCourseCode(Integer courseCode);
 }

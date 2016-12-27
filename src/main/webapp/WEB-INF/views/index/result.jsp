@@ -71,14 +71,14 @@ Double nlistenCredit = 0.0;
 	}
 	
 	function confirm(out_courseId){
-		var in_courseId = $("#courseId").val();
+		var in_courseCode = $("#courseCode").val();
 		$("#div1").fadeOut("slow");
 		
 		$.ajax({
 			url:"http://localhost:8080/selection/changeCourse/changeRequest.do",
 			data:{ 
 				     "out_courseId":out_courseId,
-				     "in_courseId":in_courseId
+				     "in_courseCode":in_courseCode
 			},
 			dataType:"json",
 			scriptCharset:'utf-8',
@@ -128,17 +128,17 @@ Double nlistenCredit = 0.0;
 			
 		%>
 		
-<div id="div1">
+<div id="div1" style="background-color:#Ece3eb">
 
-   <div id="spandiv" align="right" style="background-color:#CDCDCD;">
+   <div id="spandiv" align="right" style="background-color:#C70E5C;">
    		<span id="span1" style="cursor:pointer">关闭</span>
    </div>
 
    <p><p>
-   <div id="formdiv">
+   <div id="formdiv" >
    <form>
 
-		想要课程的ID:<input  type="text" id="courseId" /><p />
+		想要课程的课程号:<input  type="text" id="courseCode" /><p />
 
 
 	</form>
