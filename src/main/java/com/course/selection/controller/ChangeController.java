@@ -132,6 +132,13 @@ public class ChangeController {
     	Map<String, Object> params = new HashMap<>();
     	int[][] timetable = new int[12][7];
     	
+    	
+    	if(courseService.findListByCourseCode(in_courseCode).size() == 0 ){
+    		msg = "没有这门课";
+    		info.put("msg", msg);
+    		return info;
+    	}
+    	
     	int in_courseId = courseService.findListByCourseCode(in_courseCode).get(0).getCourseId();
     	
     	User user = (User) httpSession.getAttribute("user");

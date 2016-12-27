@@ -75,7 +75,7 @@ Double nlistenCredit = 0.0;
 		$("#div1").fadeOut("slow");
 		
 		$.ajax({
-			url:"http://localhost:8080/selection/changeCourse/changeRequest.do",
+			url:"<%=basePath %>changeCourse/changeRequest.do",
 			data:{ 
 				     "out_courseId":out_courseId,
 				     "in_courseCode":in_courseCode
