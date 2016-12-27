@@ -92,6 +92,12 @@
     order by course_id
   </select>
   
+  <select id="findListByCourseCode" resultMap="resultMap" parameterType="java.lang.Integer">
+  	select course_id
+  	from course
+  	where course_code=#{courseCode, jdbcType=INTEGER}
+  </select>
+  
   <update id="totalNumIncreaseWithVersion" parameterType="com.course.selection.entity.Course" >
     update course
     set

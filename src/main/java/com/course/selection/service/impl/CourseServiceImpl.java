@@ -188,4 +188,9 @@ public class CourseServiceImpl extends ServiceSupport<Course> implements CourseS
 		}
 		return true;
 	}
+
+	@Override
+	public List<Course> findListByCourseCode(Integer courseCode) {
+		return courseDao.findListByCourseCode(courseCode);
+	}
 }
