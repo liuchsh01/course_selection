@@ -21,15 +21,16 @@
 					<option value="4">按主讲班级查</option>
 					<option value="5">查有剩余学位的课</option>
 					<option value="6">按上课时间查</option>
-			</select>&nbsp;<input type="text" name="searchText" size=10></td>
+			</select></td>
+			<td><input type="text" name="searchText" size="10"></td>
 			<td><input type="button" value="课程查询" onclick="check_search()" style="color: #008000"/></td>
-			<td><a href="<%=basePath %>index/result.do" target="result"><input type="button" value="选课结果" style="color: #008000"/></a></td>
+			<td><input type="button" value="选课结果" onclick="go_result()" style="color: #008000"/></td>
 			<td><input type="button" value="退课" onclick="check_revoke()" style="color: #ff0080"/></td>
 			<td><input type="button" value="选课" onclick="check_select()" style="color: #008000"/></td>
 			<td><input type="button" value="清除" onclick="clear_selected()" style="color: #008000"/></td>
-			<td><a href="<%=basePath %>index/info.do" target="course"><input type="button" value="个人信息" style="color: #008000"/></a></td>
-			<td><a href="<%=basePath %>changeCourse/showChange.do" target="course"><input type="button" value="课程交换" style="color: #008000"/></a></td> 
-			<td><a href="<%=basePath %>index/help.do" target="course"><input type="button" value="使用说明" style="color: #008000"/></a></td>
+			<td><input type="button" value="个人信息" onclick="go_info()" style="color: #008000"/></td>
+			<td><input type="button" value="课程交换" onclick="go_change()" style="color: #008000"/></td>
+			<td><input type="button" value="使用说明" onclick="go_help()" style="color: #008000"/></td>
 			<td><input type="button" name="action9" value="退出" onclick="quit_sys()" style="color: #008000"/></td>
 			</tr>
 		</table>
@@ -89,6 +90,18 @@ function clear_selected(){
 			arr2[i].checked = false;
 		}
 	}
+}
+function go_result(){
+	parent.result.location.href="<%=basePath %>index/result.do";
+}
+function go_info(){
+	parent.course.location.href="<%=basePath %>index/info.do";
+}
+function go_change(){
+	parent.course.location.href="<%=basePath %>changeCourse/showChange.do";
+}
+function go_help(){
+	parent.course.location.href="<%=basePath %>index/help.do";
 }
 </script>
 </html>

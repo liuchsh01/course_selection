@@ -10,32 +10,18 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title>主页</title>
 
- <style type="text/css">
-
-#div1 {
-
- position:absolute;
-
- left:338px;
-
- top:91px;
-
- width:446px;
-
- height:294px;
-
- z-index:1;
-
- border:solid #7A7A7A 4px; 
-
+<style type="text/css">
+#changeDiv {
+	position:absolute;
+	left:338px;
+	top:55px;
+	width:446px;
+	height:130px;
+	z-index:1;
+	border:solid #7A7A7A 2px
 }
-
 </style>
-
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-
-
-
 </head>
 <body>
 <%
@@ -44,66 +30,47 @@ List<SelectedCourse> courses = (List<SelectedCourse>) request.getAttribute("cour
 Double selectedCredit = 0.0;
 Double nlistenCredit = 0.0;
 %>
-
 <script type="text/javascript">
-	$(function(){
-
-   		 $("#div1").hide(); //先让div隐藏
-		 
-   		 $(".change_request").click(function(){
-   			$("#div1").fadeIn("slow"); 
-   		 });
-   		 
-    	 $("#span1").click(function(){
-
-              $("#div1").hide();//淡入淡出效果 隐藏div
-              $("#courseInfo").remove();
-              $("#confirmButton").remove();
-     	 })
-
- 	});
-	
 	function change(courseId,courseName){
-	    var inId = $("#courseId").val();
-	    console.log(inId);
-		$("#spandiv").after("<div id='courseInfo'>你想交换的课程名:"+courseName+"</div>");
-		$("#formdiv").after("<input type='button' id='confirmButton' onclick='confirm("+courseId+")' value='确定' />");
+		$("#changeBody").html("<table border='0'><tr><td>交换的课程名：</td><td>" + courseName + "</td></tr>" + 
+				"<tr><td>想要课程的课程号：</td><td><input type='text' id='courseCode'/></td></tr>" + 
+				"<tr><td colspan='2' style='text-align:center'><input type='button' onclick='confirm(" + courseId + ")' value='确定'/></td></tr></table>");
+		$("#changeDiv").show();
 	}
 	
 	function confirm(out_courseId){
 		var in_courseCode = $("#courseCode").val();
-		$("#div1").fadeOut("slow");
-		
+		if(in_courseCode == null || in_courseCode.length == 0){
+			alert("请输入课程号");
+			return;
+		}
 		$.ajax({
 			url:"<%=basePath %>changeCourse/changeRequest.do",
 			data:{ 
-				     "out_courseId":out_courseId,
-				     "in_courseCode":in_courseCode
+				"in_courseCode":in_courseCode,
+				"out_courseId":out_courseId
 			},
 			dataType:"json",
 			scriptCharset:'utf-8',
-			contentType: "application/x-www-form-urlencoded; charset=utf-8", 
+			contentType: "application/x-www-form-urlencoded; charset=utf-8",
 			success:function(data){
-				console.log(data);
+				hideChangediv();
 				alert(data.msg);
 			}
 		});
-		
-		$("#courseId").val("");
-		
-		$("#courseInfo").remove();
-		$("#confirmButton").remove();
 	}
 	
+	function hideChangediv(){
+		$("#changeDiv").hide();
+        $("changeBody").html("");
+	}
 </script>
 
-
 <center>
-	<font color=#0000FF><%=user.getName() %></font>选课情况<hr>
+	<font color="#0000FF"><%=user.getName() %></font>选课情况<hr>
 </center>
-<form name="cancel">
-	<table border=0>
-		<tr align=center><td>退课</td><td><FONT SIZE="COLOR="#0000FF">课程号</FONT></td><td>课程名称</td><td>类别</td><td>学分</td></tr>
+<table border="0">
+	<tr align="center"><td>退课</td><td><FONT COLOR="#0000FF">课程号</FONT></td><td>课程名称</td><td>类别</td><td>学分</td></tr>
 		<%
 		for(int i = 0; i < courses.size(); i++){
 			SelectedCourse course = courses.get(i);
@@ -122,29 +89,20 @@ Double nlistenCredit = 0.0;
 				out.print("<td>选修</td>");
 			}
 			out.print("<td>" + course.getCredit() + "</td>");
-			out.print("<td><input type='button' class='change_request' name='change_request' onclick='change("+course.getCourseId()+",\""+course.getCourseName()+"\")' value='交换' /></td>");
+			out.print("<td><input type='button' onclick='change("+course.getCourseId()+",\""+course.getCourseName()+"\")' value='交换'/></td>");
 			out.print("</tr>");
 		}
 			
 		%>
-		
-<div id="div1" style="background-color:#Ece3eb">
+</table>
 
-   <div id="spandiv" align="right" style="background-color:#C70E5C;">
-   		<span id="span1" style="cursor:pointer">关闭</span>
-   </div>
-
-   <p><p>
-   <div id="formdiv" >
-   <form>
-
-		想要课程的课程号:<input  type="text" id="courseCode" /><p />
-
-
-	</form>
+<div id="changeDiv" style="background-color:#Ece3eb;display:none">
+	<div id="spandiv" align="right" style="background-color:#AEEEEE;">
+		<a href="javascript:void(0)" onclick="hideChangediv()">关闭</a>
 	</div>
+	<div id="changeBody" style="padding:10px;width:100%"></div>
 </div>
-		
+
 <center>
 	<font color="#0099CC">选课学分： <%=selectedCredit %>分，免听学分： <%=nlistenCredit %>分，总学分： <%=(selectedCredit + nlistenCredit) %>分 </font><font color="#FF00FF" face="楷体">（你的限选学分：<%=user.getLimitCredit() %>分 </font>） 
 </center>
