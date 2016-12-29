@@ -51,7 +51,7 @@ public class SystemController {
 	@RequestMapping(value="login.do")
 	public ModelAndView login(User user, String code){
 		String sessionCode = httpSession.getAttribute(CODE_KEY) == null ? "" : (String) httpSession.getAttribute(CODE_KEY);
-		if(code == null || "".equals(code) || !code.equals(sessionCode.toLowerCase())){
+		if(code == null || "".equals(code) || !code.toLowerCase().equals(sessionCode.toLowerCase())){
 			return new ModelAndView("system/login", "msg", "验证码错误");
 		}
 		String msg = userService.login(user);
